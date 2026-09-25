@@ -45,4 +45,5 @@ Kindling provides that, with four things:
 
 ## License
 
-Apache-2.0 (proposed). Upstream components keep their own licenses. See the landscape doc.
+Apache-2.0, © LaRocca Consulting and contributors. Upstream components keep their own
+licenses; see the landscape doc. Key decisions are recorded in [`docs/decisions/`](docs/decisions/README.md).
