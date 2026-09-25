@@ -1,0 +1,16 @@
+database_name: Kindling warehouse (DuckDB)
+sqlalchemy_uri: duckdb:////data/kindling.duckdb
+cache_timeout: null
+expose_in_sqllab: true
+allow_run_async: false
+allow_ctas: false
+allow_cvas: false
+allow_dml: false
+allow_file_upload: false
+extra:
+  allows_virtual_table_explore: true
+  engine_params:
+    connect_args:
+      read_only: true
+uuid: 38577404-51cd-5e01-a157-54bc6bacdf7d
+version: 1.0.0

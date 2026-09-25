@@ -1,0 +1,32 @@
+slice_name: Patients by age group
+description: null
+certified_by: null
+certification_details: null
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  x_axis: age_group
+  metrics:
+  - expressionType: SQL
+    sqlExpression: COUNT(DISTINCT person_id)
+    label: Patients
+    hasCustomLabel: true
+    optionName: metric_170ed4f6f3af
+  groupby: []
+  adhoc_filters: []
+  row_limit: 15
+  order_desc: true
+  truncate_metric: true
+  show_legend: false
+  orientation: vertical
+  x_axis_sort: age_group
+  x_axis_sort_asc: true
+  y_axis_format: SMART_NUMBER
+  rich_tooltip: true
+  show_value: true
+  datasource: patients__table
+query_context: null
+cache_timeout: null
+uuid: c6589418-d469-5727-ac36-e83142c62e7c
+version: 1.0.0
+dataset_uuid: d9bad853-a1b1-554a-ad0d-9da485ac061f

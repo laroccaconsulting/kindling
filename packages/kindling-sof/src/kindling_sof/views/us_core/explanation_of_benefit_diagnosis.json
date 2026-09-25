@@ -1,0 +1,59 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "name": "explanation_of_benefit_diagnosis",
+  "title": "Explanation of benefit diagnoses",
+  "status": "active",
+  "description": "One row per ExplanationOfBenefit.diagnosis. Synthea references Conditions rather than coding ICD-10 directly.",
+  "resource": "ExplanationOfBenefit",
+  "select": [
+    {
+      "column": [
+        {
+          "name": "eob_id",
+          "path": "getResourceKey()",
+          "type": "id"
+        },
+        {
+          "name": "patient_id",
+          "path": "patient.getReferenceKey(Patient)",
+          "type": "id"
+        }
+      ]
+    },
+    {
+      "forEach": "diagnosis",
+      "column": [
+        {
+          "name": "sequence",
+          "path": "sequence",
+          "type": "positiveInt"
+        },
+        {
+          "name": "condition_id",
+          "path": "diagnosis.ofType(Reference).getReferenceKey(Condition)",
+          "type": "id"
+        },
+        {
+          "name": "diagnosis_system",
+          "path": "diagnosis.ofType(CodeableConcept).coding.first().system",
+          "type": "uri"
+        },
+        {
+          "name": "diagnosis_code",
+          "path": "diagnosis.ofType(CodeableConcept).coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "type_code",
+          "path": "type.first().coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "on_admission_code",
+          "path": "onAdmission.coding.first().code",
+          "type": "code"
+        }
+      ]
+    }
+  ]
+}

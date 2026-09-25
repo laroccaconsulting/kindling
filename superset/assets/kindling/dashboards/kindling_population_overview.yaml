@@ -1,0 +1,267 @@
+dashboard_title: 'Kindling: population overview'
+description: null
+css: ''
+slug: kindling-overview
+certified_by: null
+certification_details: null
+published: true
+uuid: 49d77aef-31f9-50f4-9e04-d5028378b09a
+position:
+  DASHBOARD_VERSION_KEY: v2
+  ROOT_ID:
+    children:
+    - GRID_ID
+    id: ROOT_ID
+    type: ROOT
+  HEADER_ID:
+    id: HEADER_ID
+    meta:
+      text: 'Kindling: population overview'
+    type: HEADER
+  GRID_ID:
+    children:
+    - ROW-1
+    - ROW-2
+    - ROW-3
+    - ROW-4
+    - ROW-5
+    id: GRID_ID
+    parents:
+    - ROOT_ID
+    type: GRID
+  ROW-1:
+    children:
+    - CHART-ab8ddbbd
+    - CHART-196f3ff7
+    - CHART-d0e7459c
+    - CHART-72ecacd0
+    id: ROW-1
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  CHART-ab8ddbbd:
+    children: []
+    id: CHART-ab8ddbbd
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-1
+    type: CHART
+    meta:
+      chartId: 0
+      height: 25
+      width: 3
+      sliceName: Patients
+      uuid: 6535178a-d1e3-5fc8-b7df-083dd568fa4f
+  CHART-196f3ff7:
+    children: []
+    id: CHART-196f3ff7
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-1
+    type: CHART
+    meta:
+      chartId: 0
+      height: 25
+      width: 3
+      sliceName: Medical paid
+      uuid: 197d5ac9-f556-52a4-a286-251b51d165f1
+  CHART-d0e7459c:
+    children: []
+    id: CHART-d0e7459c
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-1
+    type: CHART
+    meta:
+      chartId: 0
+      height: 25
+      width: 3
+      sliceName: Encounters
+      uuid: 5bc93503-dd82-5e02-856e-c55f8e53098d
+  CHART-72ecacd0:
+    children: []
+    id: CHART-72ecacd0
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-1
+    type: CHART
+    meta:
+      chartId: 0
+      height: 25
+      width: 3
+      sliceName: Average PMPM (2016-2025)
+      uuid: b316cf97-c49b-5109-81b1-3196e83d68a1
+  ROW-2:
+    children:
+    - CHART-8b9b1763
+    - CHART-6e2013ef
+    id: ROW-2
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  CHART-8b9b1763:
+    children: []
+    id: CHART-8b9b1763
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-2
+    type: CHART
+    meta:
+      chartId: 0
+      height: 50
+      width: 6
+      sliceName: Medical PMPM by year
+      uuid: 27ec0b53-da12-50bc-ab8b-757ea188a7d8
+  CHART-6e2013ef:
+    children: []
+    id: CHART-6e2013ef
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-2
+    type: CHART
+    meta:
+      chartId: 0
+      height: 50
+      width: 6
+      sliceName: Paid by service category
+      uuid: 94aa7e40-e341-55e9-a94c-7c32d0a78a61
+  ROW-3:
+    children:
+    - CHART-84f7eea4
+    - CHART-11bf9229
+    - CHART-781683eb
+    id: ROW-3
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  CHART-84f7eea4:
+    children: []
+    id: CHART-84f7eea4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-3
+    type: CHART
+    meta:
+      chartId: 0
+      height: 50
+      width: 4
+      sliceName: Patients by age group
+      uuid: c6589418-d469-5727-ac36-e83142c62e7c
+  CHART-11bf9229:
+    children: []
+    id: CHART-11bf9229
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-3
+    type: CHART
+    meta:
+      chartId: 0
+      height: 50
+      width: 4
+      sliceName: Patients by sex
+      uuid: 709245cb-ecd8-5c09-8b54-6b3d8b8ef4ea
+  CHART-781683eb:
+    children: []
+    id: CHART-781683eb
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-3
+    type: CHART
+    meta:
+      chartId: 0
+      height: 50
+      width: 4
+      sliceName: Patients by race
+      uuid: 23fe8ce6-24ed-5599-a2cb-91162b08dd3c
+  ROW-4:
+    children:
+    - CHART-2be5142e
+    - CHART-89c0ec09
+    id: ROW-4
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  CHART-2be5142e:
+    children: []
+    id: CHART-2be5142e
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-4
+    type: CHART
+    meta:
+      chartId: 0
+      height: 50
+      width: 6
+      sliceName: Encounters by type
+      uuid: 4d62f020-87e5-5016-b786-27ca3d46a2dc
+  CHART-89c0ec09:
+    children: []
+    id: CHART-89c0ec09
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-4
+    type: CHART
+    meta:
+      chartId: 0
+      height: 50
+      width: 6
+      sliceName: Most common condition groups
+      uuid: 818adb5c-c7a7-5a01-a696-cc1409f66e0f
+  ROW-5:
+    children:
+    - CHART-08adc2f3
+    id: ROW-5
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  CHART-08adc2f3:
+    children: []
+    id: CHART-08adc2f3
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-5
+    type: CHART
+    meta:
+      chartId: 0
+      height: 40
+      width: 12
+      sliceName: Quality measures (Tuva)
+      uuid: 84aed71f-d4f0-509e-83f4-c2d48b388e6e
+metadata:
+  color_scheme: supersetColors
+  refresh_frequency: 0
+  expanded_slices: {}
+  label_colors: {}
+  timed_refresh_immune_slices: []
+  cross_filters_enabled: true
+  native_filter_configuration: []
+  shared_label_colors: []
+  color_scheme_domain: []
+version: 1.0.0

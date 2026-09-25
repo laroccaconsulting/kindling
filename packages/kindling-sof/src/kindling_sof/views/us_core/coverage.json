@@ -1,0 +1,69 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "name": "coverage",
+  "title": "Coverage",
+  "status": "active",
+  "description": "One row per Coverage (enrollment). Synthea embeds coverage in each EOB instead; see explanation_of_benefit.",
+  "resource": "Coverage",
+  "select": [
+    {
+      "column": [
+        {
+          "name": "id",
+          "path": "getResourceKey()",
+          "type": "id"
+        },
+        {
+          "name": "patient_id",
+          "path": "beneficiary.getReferenceKey(Patient)",
+          "type": "id"
+        },
+        {
+          "name": "status",
+          "path": "status",
+          "type": "code"
+        },
+        {
+          "name": "subscriber_id",
+          "path": "subscriberId",
+          "type": "string"
+        },
+        {
+          "name": "relationship_code",
+          "path": "relationship.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "period_start",
+          "path": "period.start",
+          "type": "dateTime"
+        },
+        {
+          "name": "period_end",
+          "path": "period.end",
+          "type": "dateTime"
+        },
+        {
+          "name": "payer_id",
+          "path": "payor.first().getReferenceKey(Organization)",
+          "type": "id"
+        },
+        {
+          "name": "payer_name",
+          "path": "payor.first().display",
+          "type": "string"
+        },
+        {
+          "name": "type_code",
+          "path": "type.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "plan_name",
+          "path": "(class.where(type.coding.code = 'plan').name | type.text).first()",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

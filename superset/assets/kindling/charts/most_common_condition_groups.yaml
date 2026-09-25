@@ -1,0 +1,32 @@
+slice_name: Most common condition groups
+description: null
+certified_by: null
+certification_details: null
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  x_axis: condition_name
+  metrics:
+  - expressionType: SQL
+    sqlExpression: COUNT(DISTINCT person_id)
+    label: Patients
+    hasCustomLabel: true
+    optionName: metric_170ed4f6f3af
+  groupby: []
+  adhoc_filters: []
+  row_limit: 15
+  order_desc: true
+  truncate_metric: true
+  show_legend: false
+  orientation: horizontal
+  x_axis_sort: Patients
+  x_axis_sort_asc: false
+  y_axis_format: SMART_NUMBER
+  rich_tooltip: true
+  show_value: true
+  datasource: conditions__table
+query_context: null
+cache_timeout: null
+uuid: 818adb5c-c7a7-5a01-a696-cc1409f66e0f
+version: 1.0.0
+dataset_uuid: a3cd01b0-e0ca-530b-8c4c-ff340f248aef

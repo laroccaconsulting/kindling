@@ -1,0 +1,23 @@
+slice_name: Patients
+description: null
+certified_by: null
+certification_details: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: COUNT(DISTINCT person_id)
+    label: Patients
+    hasCustomLabel: true
+    optionName: metric_170ed4f6f3af
+  adhoc_filters: []
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: SMART_NUMBER
+  datasource: patients__table
+query_context: null
+cache_timeout: null
+uuid: 6535178a-d1e3-5fc8-b7df-083dd568fa4f
+version: 1.0.0
+dataset_uuid: d9bad853-a1b1-554a-ad0d-9da485ac061f

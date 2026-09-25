@@ -11,3 +11,4 @@ number. An accepted ADR is never edited to reverse it; a new ADR supersedes it.
 | [0003](0003-superset-dashboards.md) | Apache Superset is the dashboard layer | Accepted |
 | [0004](0004-low-cost-aws-hosting.md) | Host the reference implementation on AWS for $10–20/month | Accepted |
 | [0005](0005-governance.md) | Kindling lives under the LaRocca Consulting organization | Accepted |
+| [0006](0006-sql-on-fhir-to-tuva.md) | FHIR reaches Tuva through SQL on FHIR views and a dbt connector | Accepted |

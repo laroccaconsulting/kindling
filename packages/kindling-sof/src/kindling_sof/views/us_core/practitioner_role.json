@@ -1,0 +1,59 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "name": "practitioner_role",
+  "title": "Practitioner roles",
+  "status": "active",
+  "description": "One row per PractitionerRole: specialty and affiliation. Synthea links these by identifier, not id.",
+  "resource": "PractitionerRole",
+  "select": [
+    {
+      "column": [
+        {
+          "name": "id",
+          "path": "getResourceKey()",
+          "type": "id"
+        },
+        {
+          "name": "practitioner_id",
+          "path": "practitioner.getReferenceKey(Practitioner)",
+          "type": "id"
+        },
+        {
+          "name": "practitioner_npi",
+          "path": "practitioner.identifier.where(system = 'http://hl7.org/fhir/sid/us-npi').value",
+          "type": "string"
+        },
+        {
+          "name": "organization_id",
+          "path": "organization.getReferenceKey(Organization)",
+          "type": "id"
+        },
+        {
+          "name": "organization_identifier",
+          "path": "organization.identifier.value",
+          "type": "string"
+        },
+        {
+          "name": "organization_name",
+          "path": "organization.display",
+          "type": "string"
+        },
+        {
+          "name": "specialty_system",
+          "path": "specialty.first().coding.first().system",
+          "type": "uri"
+        },
+        {
+          "name": "specialty_code",
+          "path": "specialty.first().coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "specialty_display",
+          "path": "(specialty.first().coding.first().display | specialty.first().text).first()",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

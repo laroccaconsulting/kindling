@@ -1,0 +1,28 @@
+version: 2
+
+sources:
+  - name: fhir
+    description: >-
+      FHIR resources flattened by kindling-sof using the bundled us_core
+      ViewDefinitions (packages/kindling-sof/src/kindling_sof/views/us_core).
+    schema: fhir
+    tables:
+      - name: patient
+      - name: encounter
+      - name: condition
+      - name: procedure
+      - name: observation
+      - name: observation_component
+      - name: diagnostic_report_result
+      - name: medication_request
+      - name: medication
+      - name: immunization
+      - name: allergy_intolerance
+      - name: practitioner
+      - name: practitioner_role
+      - name: organization
+      - name: location
+      - name: coverage
+      - name: explanation_of_benefit
+      - name: explanation_of_benefit_item
+      - name: explanation_of_benefit_diagnosis

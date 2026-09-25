@@ -174,11 +174,11 @@ from kindling_cql import Measure, backends
 
 m = Measure.from_package("ecqm-content-qicore-2025", "CMS165")
 report = m.evaluate(
-    backend=backends.FhirServer("http://localhost:8080/fhir"),   # $evaluate-measure
+    backend=backends.FhirServer("http://localhost:8080/fhir"),  # $evaluate-measure
     period=("2025-01-01", "2025-12-31"),
 )
-report.populations            # counts by population
-report.explain("patient-123") # which criteria were met, with the evaluated expressions
+report.populations  # counts by population
+report.explain("patient-123")  # which criteria were met, with the evaluated expressions
 ```
 
 Planned backends:
@@ -254,10 +254,19 @@ person can use.
 **Exit:** a new user gets from `git clone` to a Tuva dashboard of 1,000 synthetic
 patients in under 30 minutes on a laptop.
 
+**Status (2026-09-25): working end to end at 100 patients.** Pipeline, CI workflows,
+Superset dashboard and the first walkthrough are in place. `kindling-sof` passes all 144
+SQL on FHIR conformance cases. Still to do: measure 1,000 patients in CI (loading alone is
+~30 min, so the "under 30 minutes" target will need `$import` or parallel loading).
+
 ### Phase 2: Quality measures and CQL (weeks 8–14)
 - `quality` profile: HAPI clinical-reasoning plus Blaze.
-- `kindling-content` pulling a starter set of about 5 eCQMs (e.g. CMS165, CMS122,
-  CMS125, CMS130, CMS69) with VSAC expansion via the user's UMLS key.
+- `kindling-content` pulling a starter set of about 5 eCQMs with VSAC expansion via the
+  user's UMLS key. Start with measures Tuva also implements, so the CQL vs. SQL
+  cross-check has something to compare. Tuva Quality Measures 1.0 ships CMS347 / MIPS 438
+  (statin therapy), CMS68 / MIPS 130 (current medications), MIPS 131 (pain assessment)
+  and the Part D adherence and statin measures. It no longer ships CMS165, so CMS165 is a
+  CQL-only walkthrough.
 - `kindling-cql` v0.1 with the `FhirServer` and `JavaEngine` backends.
 - Parity harness v1, with the parity table published on the site.
 - Walkthroughs #2 and #3 (CQL vs. Tuva SQL cross-check).
@@ -374,14 +383,20 @@ Recorded as ADRs in [`docs/decisions/`](decisions/README.md):
 Still open: which domain or subdomain to use for the demo, and when to set up AWS
 account access (not needed before Phase 4).
 
-## 12. Next steps (the first two weeks)
+## 12. Next steps
 
-1. ~~Decide the open questions and record them as ADRs.~~ Done.
-2. Reserve the PyPI names (`kindling-health`, `kindling-cql`, `kindling-fhir-load`, …)
-   and set up the `uv` workspace with trusted publishing.
-3. Write the catalog schema and fill in the first 30 tools.
-4. Spike: Synthea (seeded, 1k patients) → HAPI → `$export` → DuckDB. Time it in GitHub
-   Actions and measure HAPI's RAM on arm64. This validates the 4 GB demo box early.
-5. Spike: CMS165 on HAPI clinical-reasoning vs. Tuva's quality measures mart on the same
-   data, and write up the first diff.
-6. Publish the docs site with the vision, landscape, ADRs and licensing explainer.
+Done so far:
+
+- ~~Decide the open questions and record them as ADRs.~~
+- ~~`uv` workspace, CI, and the Synthea → HAPI → `$export` → DuckDB → Tuva pipeline.~~
+- ~~Superset dashboards as code; first walkthrough; docs site.~~
+
+Next:
+
+1. Run the nightly pipeline at 1,000 patients in GitHub Actions and record timings and
+   HAPI RAM (validates the 4 GB demo box, ADR 0004).
+2. Speed up loading (HAPI `$import` or more parallelism) to hit the 30-minute target.
+3. Spike: CMS347 (statin therapy) on HAPI clinical-reasoning vs. Tuva's CQM438 on the
+   same data, and write up the first diff.
+4. Catalog schema plus the first 30 tools; terminology and licensing explainer.
+5. Reserve PyPI names and add trusted publishing (when ready to release).

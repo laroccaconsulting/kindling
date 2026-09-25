@@ -1,0 +1,28 @@
+slice_name: Patients by race
+description: null
+certified_by: null
+certification_details: null
+viz_type: pie
+params:
+  viz_type: pie
+  groupby:
+  - race
+  metric:
+    expressionType: SQL
+    sqlExpression: COUNT(DISTINCT person_id)
+    label: Patients
+    hasCustomLabel: true
+    optionName: metric_170ed4f6f3af
+  adhoc_filters: []
+  row_limit: 20
+  donut: true
+  show_labels: true
+  label_type: key_percent
+  show_legend: false
+  sort_by_metric: true
+  datasource: patients__table
+query_context: null
+cache_timeout: null
+uuid: 23fe8ce6-24ed-5599-a2cb-91162b08dd3c
+version: 1.0.0
+dataset_uuid: d9bad853-a1b1-554a-ad0d-9da485ac061f

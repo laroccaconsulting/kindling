@@ -1,0 +1,55 @@
+site_name: Kindling
+site_description: Open-source healthcare tools, wired together — guides, a reference stack and glue libraries.
+site_url: https://laroccaconsulting.github.io/kindling/
+repo_url: https://github.com/laroccaconsulting/kindling
+repo_name: laroccaconsulting/kindling
+edit_uri: edit/main/docs/
+copyright: © LaRocca Consulting and contributors · Apache-2.0 · Synthetic data only
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep orange
+      toggle: { icon: material/weather-night, name: Dark mode }
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep orange
+      toggle: { icon: material/weather-sunny, name: Light mode }
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc: { permalink: true }
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Home: index.md
+  - Walkthroughs:
+      - Zero to dashboard: guides/zero-to-dashboard.md
+  - Concepts:
+      - From Synthea FHIR to Tuva: concepts/synthea-to-tuva.md
+      - SQL on FHIR: concepts/sql-on-fhir.md
+  - Packages: packages.md
+  - Landscape: landscape.md
+  - Vision & plan: PLAN.md
+  - Decisions:
+      - decisions/README.md
+      - decisions/0001-primary-persona.md
+      - decisions/0002-hapi-golden-path.md
+      - decisions/0003-superset-dashboards.md
+      - decisions/0004-low-cost-aws-hosting.md
+      - decisions/0005-governance.md
+      - decisions/0006-sql-on-fhir-to-tuva.md

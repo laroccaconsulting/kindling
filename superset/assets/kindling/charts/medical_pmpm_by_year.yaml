@@ -1,0 +1,32 @@
+slice_name: Medical PMPM by year
+description: null
+certified_by: null
+certification_details: null
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  x_axis: year
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(paid) / SUM(member_months)
+    label: PMPM
+    hasCustomLabel: true
+    optionName: metric_74cfb8088054
+  groupby: []
+  adhoc_filters: []
+  row_limit: 20
+  order_desc: true
+  truncate_metric: true
+  show_legend: false
+  orientation: vertical
+  x_axis_sort: year
+  x_axis_sort_asc: true
+  y_axis_format: $,.0f
+  rich_tooltip: true
+  show_value: true
+  datasource: pmpm__table
+query_context: null
+cache_timeout: null
+uuid: 27ec0b53-da12-50bc-ab8b-757ea188a7d8
+version: 1.0.0
+dataset_uuid: ec8244ad-c1a4-565b-8cf5-0fec03352ca3

@@ -1,0 +1,6 @@
+# Pinned together with stack/matrix.yaml.
+packages:
+  - git: "https://github.com/tuva-health/tuva-core.git"
+    revision: "v1.0.0"
+  - git: "https://github.com/tuva-health/quality_measures.git"
+    revision: "v1.0.0"

@@ -1,0 +1,23 @@
+slice_name: Average PMPM (2016-2025)
+description: null
+certified_by: null
+certification_details: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(paid) / SUM(member_months)
+    label: PMPM
+    hasCustomLabel: true
+    optionName: metric_74cfb8088054
+  adhoc_filters: []
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: $,.0f
+  datasource: pmpm__table
+query_context: null
+cache_timeout: null
+uuid: b316cf97-c49b-5109-81b1-3196e83d68a1
+version: 1.0.0
+dataset_uuid: ec8244ad-c1a4-565b-8cf5-0fec03352ca3
