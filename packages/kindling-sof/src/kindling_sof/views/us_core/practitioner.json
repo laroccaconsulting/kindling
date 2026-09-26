@@ -1,0 +1,59 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "name": "practitioner",
+  "title": "Practitioners",
+  "status": "active",
+  "description": "One row per Practitioner.",
+  "resource": "Practitioner",
+  "select": [
+    {
+      "column": [
+        {
+          "name": "id",
+          "path": "getResourceKey()",
+          "type": "id"
+        },
+        {
+          "name": "npi",
+          "path": "identifier.where(system = 'http://hl7.org/fhir/sid/us-npi').value.first()",
+          "type": "string"
+        },
+        {
+          "name": "family_name",
+          "path": "name.first().family",
+          "type": "string"
+        },
+        {
+          "name": "given_name",
+          "path": "name.first().given.first()",
+          "type": "string"
+        },
+        {
+          "name": "name_prefix",
+          "path": "name.first().prefix.first()",
+          "type": "string"
+        },
+        {
+          "name": "gender",
+          "path": "gender",
+          "type": "code"
+        },
+        {
+          "name": "city",
+          "path": "address.first().city",
+          "type": "string"
+        },
+        {
+          "name": "state",
+          "path": "address.first().state",
+          "type": "string"
+        },
+        {
+          "name": "postal_code",
+          "path": "address.first().postalCode",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

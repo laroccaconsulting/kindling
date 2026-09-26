@@ -1,0 +1,159 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "name": "patient",
+  "title": "Patients",
+  "status": "active",
+  "description": "One row per Patient (US Core demographics).",
+  "resource": "Patient",
+  "select": [
+    {
+      "column": [
+        {
+          "name": "id",
+          "path": "getResourceKey()",
+          "type": "id"
+        },
+        {
+          "name": "source_identifier",
+          "path": "identifier.where(system = 'https://github.com/synthetichealth/synthea').value.first()",
+          "type": "string"
+        },
+        {
+          "name": "mrn",
+          "path": "identifier.where(type.coding.code = 'MR').value.first()",
+          "type": "string"
+        },
+        {
+          "name": "ssn",
+          "path": "identifier.where(system = 'http://hl7.org/fhir/sid/us-ssn').value.first()",
+          "type": "string"
+        },
+        {
+          "name": "family_name",
+          "path": "(name.where(use = 'official').family | name.family).first()",
+          "type": "string"
+        },
+        {
+          "name": "given_name",
+          "path": "(name.where(use = 'official').given | name.given).first()",
+          "type": "string"
+        },
+        {
+          "name": "middle_name",
+          "path": "name.where(use = 'official').first().given[1]",
+          "type": "string"
+        },
+        {
+          "name": "name_prefix",
+          "path": "name.where(use = 'official').first().prefix.first()",
+          "type": "string"
+        },
+        {
+          "name": "name_suffix",
+          "path": "name.where(use = 'official').first().suffix.first()",
+          "type": "string"
+        },
+        {
+          "name": "gender",
+          "path": "gender",
+          "type": "code"
+        },
+        {
+          "name": "birth_sex",
+          "path": "extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex').value.ofType(code).first()",
+          "type": "code"
+        },
+        {
+          "name": "birth_date",
+          "path": "birthDate",
+          "type": "date"
+        },
+        {
+          "name": "deceased_datetime",
+          "path": "deceased.ofType(dateTime)",
+          "type": "dateTime"
+        },
+        {
+          "name": "deceased_flag",
+          "path": "iif(deceased.ofType(dateTime).exists() or deceased.ofType(boolean) = true, true, false)",
+          "type": "boolean"
+        },
+        {
+          "name": "race_code",
+          "path": "extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension('ombCategory').value.ofType(Coding).code.first()",
+          "type": "code"
+        },
+        {
+          "name": "race_display",
+          "path": "extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension('text').value.ofType(string).first()",
+          "type": "string"
+        },
+        {
+          "name": "ethnicity_code",
+          "path": "extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension('ombCategory').value.ofType(Coding).code.first()",
+          "type": "code"
+        },
+        {
+          "name": "ethnicity_display",
+          "path": "extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension('text').value.ofType(string).first()",
+          "type": "string"
+        },
+        {
+          "name": "address_line",
+          "path": "address.first().line.join(', ')",
+          "type": "string"
+        },
+        {
+          "name": "city",
+          "path": "address.first().city",
+          "type": "string"
+        },
+        {
+          "name": "state",
+          "path": "address.first().state",
+          "type": "string"
+        },
+        {
+          "name": "postal_code",
+          "path": "address.first().postalCode",
+          "type": "string"
+        },
+        {
+          "name": "country",
+          "path": "address.first().country",
+          "type": "string"
+        },
+        {
+          "name": "latitude",
+          "path": "address.first().extension('http://hl7.org/fhir/StructureDefinition/geolocation').extension('latitude').value.ofType(decimal).first()",
+          "type": "decimal"
+        },
+        {
+          "name": "longitude",
+          "path": "address.first().extension('http://hl7.org/fhir/StructureDefinition/geolocation').extension('longitude').value.ofType(decimal).first()",
+          "type": "decimal"
+        },
+        {
+          "name": "phone",
+          "path": "telecom.where(system = 'phone').value.first()",
+          "type": "string"
+        },
+        {
+          "name": "email",
+          "path": "telecom.where(system = 'email').value.first()",
+          "type": "string"
+        },
+        {
+          "name": "marital_status_code",
+          "path": "maritalStatus.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "language_code",
+          "path": "communication.language.coding.first().code.first()",
+          "type": "code"
+        }
+      ]
+    }
+  ]
+}

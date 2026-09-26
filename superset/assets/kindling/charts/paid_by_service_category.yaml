@@ -1,0 +1,32 @@
+slice_name: Paid by service category
+description: null
+certified_by: null
+certification_details: null
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  x_axis: service_category_2
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(paid_amount)
+    label: Paid
+    hasCustomLabel: true
+    optionName: metric_0ac15724c013
+  groupby: []
+  adhoc_filters: []
+  row_limit: 15
+  order_desc: true
+  truncate_metric: true
+  show_legend: false
+  orientation: horizontal
+  x_axis_sort: Paid
+  x_axis_sort_asc: false
+  y_axis_format: $,.0f
+  rich_tooltip: true
+  show_value: true
+  datasource: medical_claims__table
+query_context: null
+cache_timeout: null
+uuid: 94aa7e40-e341-55e9-a94c-7c32d0a78a61
+version: 1.0.0
+dataset_uuid: eea91b9e-9923-5222-b2ae-6da83c402815

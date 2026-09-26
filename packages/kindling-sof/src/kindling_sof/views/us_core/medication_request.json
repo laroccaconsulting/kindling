@@ -1,0 +1,99 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "name": "medication_request",
+  "title": "Medication requests",
+  "status": "active",
+  "description": "One row per MedicationRequest (prescriptions).",
+  "resource": "MedicationRequest",
+  "select": [
+    {
+      "column": [
+        {
+          "name": "id",
+          "path": "getResourceKey()",
+          "type": "id"
+        },
+        {
+          "name": "patient_id",
+          "path": "subject.getReferenceKey(Patient)",
+          "type": "id"
+        },
+        {
+          "name": "encounter_id",
+          "path": "encounter.getReferenceKey(Encounter)",
+          "type": "id"
+        },
+        {
+          "name": "status",
+          "path": "status",
+          "type": "code"
+        },
+        {
+          "name": "intent",
+          "path": "intent",
+          "type": "code"
+        },
+        {
+          "name": "authored_on",
+          "path": "authoredOn",
+          "type": "dateTime"
+        },
+        {
+          "name": "medication_system",
+          "path": "medication.ofType(CodeableConcept).coding.first().system",
+          "type": "uri"
+        },
+        {
+          "name": "medication_code",
+          "path": "medication.ofType(CodeableConcept).coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "medication_display",
+          "path": "(medication.ofType(CodeableConcept).coding.first().display | medication.ofType(CodeableConcept).text).first()",
+          "type": "string"
+        },
+        {
+          "name": "medication_id",
+          "path": "medication.ofType(Reference).getReferenceKey(Medication)",
+          "type": "id"
+        },
+        {
+          "name": "requester_id",
+          "path": "requester.getReferenceKey(Practitioner)",
+          "type": "id"
+        },
+        {
+          "name": "reason_condition_id",
+          "path": "reasonReference.first().getReferenceKey(Condition)",
+          "type": "id"
+        },
+        {
+          "name": "dosage_text",
+          "path": "dosageInstruction.first().text",
+          "type": "string"
+        },
+        {
+          "name": "as_needed",
+          "path": "dosageInstruction.first().asNeeded.ofType(boolean)",
+          "type": "boolean"
+        },
+        {
+          "name": "dispense_quantity",
+          "path": "dispenseRequest.quantity.value",
+          "type": "decimal"
+        },
+        {
+          "name": "dispense_repeats",
+          "path": "dispenseRequest.numberOfRepeatsAllowed",
+          "type": "integer"
+        },
+        {
+          "name": "days_supply",
+          "path": "dispenseRequest.expectedSupplyDuration.value",
+          "type": "decimal"
+        }
+      ]
+    }
+  ]
+}

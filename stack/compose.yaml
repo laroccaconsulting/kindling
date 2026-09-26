@@ -1,0 +1,80 @@
+# Kindling reference stack.
+#
+#   docker compose -f stack/compose.yaml --profile core up -d
+#   docker compose -f stack/compose.yaml --profile analytics up -d
+#
+# Every image is pinned. Bump versions in stack/matrix.yaml and here together.
+
+name: kindling
+
+x-hapi-env: &hapi-env
+  SPRING_DATASOURCE_URL: jdbc:postgresql://hapi-db:5432/hapi
+  SPRING_DATASOURCE_USERNAME: hapi
+  SPRING_DATASOURCE_PASSWORD: hapi
+  SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+  HIBERNATE_DIALECT: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+  SPRING_JPA_PROPERTIES_HIBERNATE_SEARCH_ENABLED: "false"
+  HAPI_FHIR_FHIR_VERSION: R4
+  # Bulk Data $export feeds the analytics pipeline.
+  HAPI_FHIR_BULK_EXPORT_ENABLED: "true"
+  HAPI_FHIR_BULK_EXPORT_FILE_RETENTION_PERIOD_HOURS: "24"
+  # Clinical Reasoning: $evaluate-measure, $care-gaps, Library/$evaluate.
+  HAPI_FHIR_CR_ENABLED: "true"
+  # Synthea bundles reference Practitioners/Organizations by conditional URL.
+  HAPI_FHIR_ALLOW_EXTERNAL_REFERENCES: "true"
+  HAPI_FHIR_CLIENT_ID_STRATEGY: ANY
+  HAPI_FHIR_ALLOW_MULTIPLE_DELETE: "true"
+  HAPI_FHIR_EXPUNGE_ENABLED: "true"
+  HAPI_FHIR_NARRATIVE_ENABLED: "false"
+  HAPI_FHIR_MAX_PAGE_SIZE: "1000"
+  JAVA_TOOL_OPTIONS: ${KINDLING_HAPI_JAVA_OPTS:--XX:MaxRAMPercentage=60 -XX:+UseG1GC}
+
+services:
+  hapi-db:
+    image: postgres:16.10-alpine
+    profiles: [core, analytics, quality, full]
+    environment:
+      POSTGRES_DB: hapi
+      POSTGRES_USER: hapi
+      POSTGRES_PASSWORD: hapi
+    command: >-
+      postgres -c shared_buffers=256MB -c max_wal_size=2GB
+      -c synchronous_commit=off
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hapi -d hapi"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - hapi-db:/var/lib/postgresql/data
+
+  hapi:
+    image: hapiproject/hapi:v8.12.0-1
+    profiles: [core, analytics, quality, full]
+    environment: *hapi-env
+    ports:
+      - "${KINDLING_HAPI_PORT:-8080}:8080"
+    depends_on:
+      hapi-db:
+        condition: service_healthy
+    mem_limit: ${KINDLING_HAPI_MEM:-3g}
+
+  superset:
+    build:
+      context: ../superset
+    image: kindling/superset:local
+    profiles: [analytics, full]
+    environment:
+      SUPERSET_SECRET_KEY: ${KINDLING_SUPERSET_SECRET:-kindling-local-dev-only-change-me}
+      SUPERSET_ADMIN_PASSWORD: ${KINDLING_SUPERSET_ADMIN_PASSWORD:-admin}
+      KINDLING_DUCKDB_PATH: /data/kindling.duckdb
+    ports:
+      - "${KINDLING_SUPERSET_PORT:-8088}:8088"
+    volumes:
+      - ${KINDLING_DATA_DIR:-../.kindling}/warehouse:/data:ro
+      - superset-home:/app/superset_home
+    mem_limit: ${KINDLING_SUPERSET_MEM:-1500m}
+
+volumes:
+  hapi-db:
+  superset-home:

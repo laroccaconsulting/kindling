@@ -1,0 +1,89 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "name": "immunization",
+  "title": "Immunizations",
+  "status": "active",
+  "description": "One row per Immunization.",
+  "resource": "Immunization",
+  "select": [
+    {
+      "column": [
+        {
+          "name": "id",
+          "path": "getResourceKey()",
+          "type": "id"
+        },
+        {
+          "name": "patient_id",
+          "path": "patient.getReferenceKey(Patient)",
+          "type": "id"
+        },
+        {
+          "name": "encounter_id",
+          "path": "encounter.getReferenceKey(Encounter)",
+          "type": "id"
+        },
+        {
+          "name": "status",
+          "path": "status",
+          "type": "code"
+        },
+        {
+          "name": "status_reason_code",
+          "path": "statusReason.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "vaccine_system",
+          "path": "vaccineCode.coding.first().system",
+          "type": "uri"
+        },
+        {
+          "name": "vaccine_code",
+          "path": "vaccineCode.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "vaccine_display",
+          "path": "(vaccineCode.coding.first().display | vaccineCode.text).first()",
+          "type": "string"
+        },
+        {
+          "name": "occurrence_datetime",
+          "path": "occurrence.ofType(dateTime)",
+          "type": "dateTime"
+        },
+        {
+          "name": "location_id",
+          "path": "location.getReferenceKey(Location)",
+          "type": "id"
+        },
+        {
+          "name": "lot_number",
+          "path": "lotNumber",
+          "type": "string"
+        },
+        {
+          "name": "site_code",
+          "path": "site.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "route_code",
+          "path": "route.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "dose_quantity",
+          "path": "doseQuantity.value",
+          "type": "decimal"
+        },
+        {
+          "name": "practitioner_id",
+          "path": "performer.actor.first().getReferenceKey(Practitioner)",
+          "type": "id"
+        }
+      ]
+    }
+  ]
+}

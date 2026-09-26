@@ -1,0 +1,32 @@
+slice_name: Encounters by type
+description: null
+certified_by: null
+certification_details: null
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  x_axis: encounter_type
+  metrics:
+  - expressionType: SQL
+    sqlExpression: COUNT(*)
+    label: Encounters
+    hasCustomLabel: true
+    optionName: metric_6fc282c997bd
+  groupby: []
+  adhoc_filters: []
+  row_limit: 15
+  order_desc: true
+  truncate_metric: true
+  show_legend: false
+  orientation: horizontal
+  x_axis_sort: Encounters
+  x_axis_sort_asc: false
+  y_axis_format: SMART_NUMBER
+  rich_tooltip: true
+  show_value: true
+  datasource: encounters__table
+query_context: null
+cache_timeout: null
+uuid: 4d62f020-87e5-5016-b786-27ca3d46a2dc
+version: 1.0.0
+dataset_uuid: 885eab0d-2d60-5d90-be89-79e6197948ad

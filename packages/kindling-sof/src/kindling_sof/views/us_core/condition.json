@@ -1,0 +1,74 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "name": "condition",
+  "title": "Conditions",
+  "status": "active",
+  "description": "One row per Condition (problem list items and encounter diagnoses).",
+  "resource": "Condition",
+  "select": [
+    {
+      "column": [
+        {
+          "name": "id",
+          "path": "getResourceKey()",
+          "type": "id"
+        },
+        {
+          "name": "patient_id",
+          "path": "subject.getReferenceKey(Patient)",
+          "type": "id"
+        },
+        {
+          "name": "encounter_id",
+          "path": "encounter.getReferenceKey(Encounter)",
+          "type": "id"
+        },
+        {
+          "name": "clinical_status",
+          "path": "clinicalStatus.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "verification_status",
+          "path": "verificationStatus.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "category",
+          "path": "category.first().coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "code_system",
+          "path": "code.coding.first().system",
+          "type": "uri"
+        },
+        {
+          "name": "code_code",
+          "path": "code.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "code_display",
+          "path": "(code.coding.first().display | code.text).first()",
+          "type": "string"
+        },
+        {
+          "name": "onset_datetime",
+          "path": "onset.ofType(dateTime)",
+          "type": "dateTime"
+        },
+        {
+          "name": "abatement_datetime",
+          "path": "abatement.ofType(dateTime)",
+          "type": "dateTime"
+        },
+        {
+          "name": "recorded_date",
+          "path": "recordedDate",
+          "type": "dateTime"
+        }
+      ]
+    }
+  ]
+}

@@ -32,7 +32,9 @@ and runs them in public.
 | **Digital health startups** | A realistic sandbox (EHR + FHIR + SMART + CDS Hooks) to build and demo against. |
 | **Educators and students** | A place to click around and see the whole ecosystem working. |
 
-Start with the first two. They have the most pain and the least open-source help.
+**Primary persona: analytics and quality teams** (the first two rows; see
+[ADR 0001](decisions/0001-primary-persona.md)). They have the most pain and the least
+open-source help.
 
 ## 3. The whole story (target architecture)
 
@@ -127,7 +129,7 @@ Docker Compose with **profiles**, so people start only what they need:
 | Profile | Services | Approx. RAM |
 |---|---|---|
 | `core` | HAPI FHIR (Postgres), data loader job | 3 GB |
-| `analytics` | + DuckDB/Postgres, dbt + Tuva, Evidence/Superset | 5 GB |
+| `analytics` | + DuckDB/Postgres, dbt + Tuva, Apache Superset | 5 GB |
 | `quality` | + clinical-reasoning (in HAPI), Blaze, CQL runner, VS Code CQL dev container | 6 GB |
 | `clinical` | + Medplum (server + app), Keycloak (SMART), SMART launcher, CDS Hooks service | 8 GB |
 | `ehr-legacy` | + OpenEMR and/or OpenMRS with FHIR facades | +3 GB |
@@ -172,11 +174,11 @@ from kindling_cql import Measure, backends
 
 m = Measure.from_package("ecqm-content-qicore-2025", "CMS165")
 report = m.evaluate(
-    backend=backends.FhirServer("http://localhost:8080/fhir"),   # $evaluate-measure
+    backend=backends.FhirServer("http://localhost:8080/fhir"),  # $evaluate-measure
     period=("2025-01-01", "2025-12-31"),
 )
-report.populations            # counts by population
-report.explain("patient-123") # which criteria were met, with the evaluated expressions
+report.populations  # counts by population
+report.explain("patient-123")  # which criteria were met, with the evaluated expressions
 ```
 
 Planned backends:
@@ -211,18 +213,21 @@ that every population of a measure has patients in it.
 
 ### 4.5 Hosted reference implementation (`deploy/`)
 
-A public demo at something like `demo.kindling.health`:
+The budget is **$10–20/month on AWS**, so the design is **"compute in CI, serve
+cheaply"** ([ADR 0004](decisions/0004-low-cost-aws-hosting.md)):
 
-- **Read-only public tier:** FHIR API (rate-limited), dashboards, a measure-results
-  explorer, and the EHR UI with shared demo logins.
-- **Sandbox tier:** a per-user ephemeral stack, reset every 24h, for trying writes, SMART
-  launches and CDS Hooks.
-- **Nightly rebuild** from `main` with fresh synthetic data. This doubles as the largest
-  integration test.
-- Start with a single mid-size VM running Compose (cheap, simple), and move to k8s with
-  Helm charts once the sandbox tier needs per-user isolation.
-- Synthetic data only, with a visible banner saying so. Rate limits and WAF in front. No
-  user-uploaded data.
+- **Nightly GitHub Actions build** (free for public repos): Synthea → HAPI → bulk export
+  → DuckDB → Tuva → CQL evaluation. It publishes a HAPI database dump, `tuva.duckdb`,
+  Parquet files and MeasureReports to S3. This is also the largest integration test.
+- **Static tier (≈ $0):** the docs on GitHub Pages; a measure-results explorer and an
+  in-browser SQL console (DuckDB-WASM) served from S3 + CloudFront.
+- **Live tier (≈ $15/month):** one stateless t4g.medium spot instance running Caddy,
+  HAPI (public read-only, single-patient `$evaluate-measure`), slim Superset and Postgres,
+  restored nightly from the artifacts. No ALB, NAT, RDS or EKS.
+- **Sandbox tier (≈ $0 to us):** a devcontainer so anyone can run the full stack in
+  their own Codespace or on their laptop, instead of hosted per-user sandboxes.
+- Synthetic data only, with a visible banner saying so. Budget alerts at $15 and $20.
+  Infrastructure as code with OpenTofu.
 
 ## 5. Roadmap
 
@@ -242,16 +247,26 @@ person can use.
 - `stack/` `core` + `analytics` profiles.
 - `kindling-synthea`, `kindling-fhir-load`, `kindling-bulk` v0.1.
 - FHIR → Tuva input layer path (via `kindling-sof` or an existing Tuva connector, per ADR).
-- Tuva running on DuckDB, with a small Evidence (or Superset) dashboard.
+- Tuva running on DuckDB, with starter Superset dashboards stored as code (exported asset
+  bundles).
 - Walkthrough #1 and a nightly CI job that runs it end-to-end.
 
 **Exit:** a new user gets from `git clone` to a Tuva dashboard of 1,000 synthetic
 patients in under 30 minutes on a laptop.
 
+**Status (2026-09-25): working end to end at 100 patients.** Pipeline, CI workflows,
+Superset dashboard and the first walkthrough are in place. `kindling-sof` passes all 144
+SQL on FHIR conformance cases. Still to do: measure 1,000 patients in CI (loading alone is
+~30 min, so the "under 30 minutes" target will need `$import` or parallel loading).
+
 ### Phase 2: Quality measures and CQL (weeks 8–14)
 - `quality` profile: HAPI clinical-reasoning plus Blaze.
-- `kindling-content` pulling a starter set of about 5 eCQMs (e.g. CMS165, CMS122,
-  CMS125, CMS130, CMS69) with VSAC expansion via the user's UMLS key.
+- `kindling-content` pulling a starter set of about 5 eCQMs with VSAC expansion via the
+  user's UMLS key. Start with measures Tuva also implements, so the CQL vs. SQL
+  cross-check has something to compare. Tuva Quality Measures 1.0 ships CMS347 / MIPS 438
+  (statin therapy), CMS68 / MIPS 130 (current medications), MIPS 131 (pain assessment)
+  and the Part D adherence and statin measures. It no longer ships CMS165, so CMS165 is a
+  CQL-only walkthrough.
 - `kindling-cql` v0.1 with the `FhirServer` and `JavaEngine` backends.
 - Parity harness v1, with the parity table published on the site.
 - Walkthroughs #2 and #3 (CQL vs. Tuva SQL cross-check).
@@ -269,9 +284,12 @@ and SQL agree and why they differ.
 - Walkthroughs #4 and #5.
 
 ### Phase 4: Hosted reference (starts in parallel at about week 10; public by week 20)
-- Single-VM deployment of `full`, nightly rebuild, monitoring, banner, rate limits.
-- Measure-results explorer UI (MeasureReports + per-patient explanations).
-- Later: sandbox tier on k8s.
+- Nightly artifact build in GitHub Actions → S3 (starts in Phase 1 as the CI job).
+- OpenTofu for the $10–20/month footprint (ADR 0004): spot t4g.medium in an ASG of
+  size 1, S3, CloudFront, Route 53 and budget alerts. Needs AWS account access.
+- Live tier: Caddy + HAPI (read-only) + Superset, restored from nightly artifacts.
+- Static measure-results explorer and a DuckDB-WASM SQL console.
+- Devcontainer / Codespaces config as the "sandbox tier".
 
 ### Phase 5: Enterprise adoption (week 20+)
 - Walkthrough #6: warehouse adapters (Postgres, Snowflake, Databricks, BigQuery).
@@ -326,7 +344,8 @@ kindling/
 | **Upstream churn** (e.g. cqf-ruler folded into HAPI clinical-reasoning; NextGen Connect moved to a closed license) | Pinned matrix, nightly tests, ADRs that record *why*, and a catalog "status" field so the docs warn users. |
 | **Terminology licensing** (CPT, SNOMED, VSAC terms) | Never redistribute restricted content. Fetch with the user's credentials. Synthea's code subset works for demos. Document plainly what's required. |
 | **Resource footprint** (several JVMs) | Profiles; publish RAM numbers; a `lite` path using Blaze + DuckDB. |
-| **Public demo abuse or cost** | Read-only public tier, rate limits, nightly wipe, budget alerts, sandbox tier behind sign-in. |
+| **Public demo abuse or cost** | $20/month hard budget: precompute in CI, stateless spot instance, read-only API, Caddy rate limits, AWS Budgets alerts, and a scheduled overnight stop as the fallback. |
+| **4 GB demo box is tight** | Small population (~1k), capped HAPI heap, swap, slim Superset; heavy engines only in local/Codespaces. |
 | **Correctness claims** | State plainly that Kindling is *not* a certified measure calculator. The parity table shows agreement, not certification. |
 | **Scope creep** | Personas and phases gate the work; the landscape catalog can list a tool without Kindling integrating it. |
 | **Maintainer bandwidth** | Each package is small and independent; build a contributor path through catalog entries and walkthrough fixes; seek sponsorship (see below). |
@@ -351,21 +370,33 @@ kindling/
 - Monthly PyPI downloads, contributors from outside the core team, and adoption case
   studies from health systems or payers.
 
-## 11. Open decisions
+## 11. Decisions
 
-1. **Primary persona:** analytics/quality teams (recommended) vs. interop/app developers.
-2. **Golden-path FHIR server:** HAPI (recommended: broadest adoption, and
-   clinical-reasoning is built in) vs. Blaze (lighter, fast CQL) vs. Medplum (also the EHR).
-3. **Dashboard layer:** Evidence (code-first, fits dbt) vs. Superset (familiar BI).
-4. **Hosting budget and domain** for the public reference implementation.
-5. **Governance:** a personal/consultancy project for now, or a neutral org from day one.
+Recorded as ADRs in [`docs/decisions/`](decisions/README.md):
 
-## 12. Next steps (the first two weeks)
+1. **Primary persona:** analytics and quality teams ([0001](decisions/0001-primary-persona.md)).
+2. **Golden-path FHIR server:** HAPI FHIR with clinical-reasoning ([0002](decisions/0002-hapi-golden-path.md)).
+3. **Dashboard layer:** Apache Superset ([0003](decisions/0003-superset-dashboards.md)).
+4. **Hosting:** AWS for $10–20/month using "compute in CI, serve cheaply" ([0004](decisions/0004-low-cost-aws-hosting.md)).
+5. **Governance:** stays under LaRocca Consulting ([0005](decisions/0005-governance.md)).
 
-1. Decide on the open questions above, and record each decision as an ADR.
-2. Reserve the PyPI names and set up the `uv` workspace with trusted publishing.
-3. Write the catalog schema and fill in the first 30 tools.
-4. Spike: Synthea (seeded, 1k patients) → HAPI → `$export` → DuckDB, and time it.
-5. Spike: CMS165 on HAPI clinical-reasoning vs. Tuva's quality measures mart on the same
-   data, and write up the first diff.
-6. Publish the docs site with the vision, the landscape and the licensing explainer.
+Still open: which domain or subdomain to use for the demo, and when to set up AWS
+account access (not needed before Phase 4).
+
+## 12. Next steps
+
+Done so far:
+
+- ~~Decide the open questions and record them as ADRs.~~
+- ~~`uv` workspace, CI, and the Synthea → HAPI → `$export` → DuckDB → Tuva pipeline.~~
+- ~~Superset dashboards as code; first walkthrough; docs site.~~
+
+Next:
+
+1. Run the nightly pipeline at 1,000 patients in GitHub Actions and record timings and
+   HAPI RAM (validates the 4 GB demo box, ADR 0004).
+2. Speed up loading (HAPI `$import` or more parallelism) to hit the 30-minute target.
+3. Spike: CMS347 (statin therapy) on HAPI clinical-reasoning vs. Tuva's CQM438 on the
+   same data, and write up the first diff.
+4. Catalog schema plus the first 30 tools; terminology and licensing explainer.
+5. Reserve PyPI names and add trusted publishing (when ready to release).

@@ -1,0 +1,119 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "name": "observation",
+  "title": "Observations",
+  "status": "active",
+  "description": "One row per Observation. Panels such as blood pressure also appear in observation_component.",
+  "resource": "Observation",
+  "select": [
+    {
+      "column": [
+        {
+          "name": "id",
+          "path": "getResourceKey()",
+          "type": "id"
+        },
+        {
+          "name": "patient_id",
+          "path": "subject.getReferenceKey(Patient)",
+          "type": "id"
+        },
+        {
+          "name": "encounter_id",
+          "path": "encounter.getReferenceKey(Encounter)",
+          "type": "id"
+        },
+        {
+          "name": "status",
+          "path": "status",
+          "type": "code"
+        },
+        {
+          "name": "category",
+          "path": "category.first().coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "code_system",
+          "path": "code.coding.first().system",
+          "type": "uri"
+        },
+        {
+          "name": "code_code",
+          "path": "code.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "code_display",
+          "path": "(code.coding.first().display | code.text).first()",
+          "type": "string"
+        },
+        {
+          "name": "effective_datetime",
+          "path": "(effective.ofType(dateTime) | effective.ofType(Period).start).first()",
+          "type": "dateTime"
+        },
+        {
+          "name": "issued",
+          "path": "issued",
+          "type": "instant"
+        },
+        {
+          "name": "value_quantity",
+          "path": "value.ofType(Quantity).value",
+          "type": "decimal"
+        },
+        {
+          "name": "value_unit",
+          "path": "(value.ofType(Quantity).code | value.ofType(Quantity).unit).first()",
+          "type": "string"
+        },
+        {
+          "name": "value_string",
+          "path": "value.ofType(string)",
+          "type": "string"
+        },
+        {
+          "name": "value_boolean",
+          "path": "value.ofType(boolean)",
+          "type": "boolean"
+        },
+        {
+          "name": "value_code_system",
+          "path": "value.ofType(CodeableConcept).coding.first().system",
+          "type": "uri"
+        },
+        {
+          "name": "value_code",
+          "path": "value.ofType(CodeableConcept).coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "value_code_display",
+          "path": "(value.ofType(CodeableConcept).coding.first().display | value.ofType(CodeableConcept).text).first()",
+          "type": "string"
+        },
+        {
+          "name": "interpretation_code",
+          "path": "interpretation.first().coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "reference_range_low",
+          "path": "referenceRange.first().low.value",
+          "type": "decimal"
+        },
+        {
+          "name": "reference_range_high",
+          "path": "referenceRange.first().high.value",
+          "type": "decimal"
+        },
+        {
+          "name": "has_components",
+          "path": "component.exists()",
+          "type": "boolean"
+        }
+      ]
+    }
+  ]
+}

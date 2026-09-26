@@ -1,0 +1,114 @@
+name: Pipeline (end to end)
+
+# The "zero to dashboard" walkthrough as a test, and the nightly build of the
+# artifacts the hosted demo serves (ADR 0004):
+#   Synthea → HAPI FHIR → Bulk $export → SQL on FHIR → DuckDB → Tuva (dbt)
+
+on:
+  schedule:
+    - cron: "17 6 * * *" # nightly, 06:17 UTC
+  workflow_dispatch:
+    inputs:
+      patients:
+        description: Living patients to generate
+        default: "250"
+  pull_request:
+    paths:
+      - "packages/**"
+      - "dbt/**"
+      - "stack/**"
+      - ".github/workflows/pipeline.yml"
+
+concurrency:
+  group: pipeline-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Nightly runs build the demo population; PRs run a quick smoke test.
+  PATIENTS: ${{ inputs.patients || (github.event_name == 'schedule' && '1000') || '50' }}
+  KINDLING_DATA_DIR: ${{ github.workspace }}/.kindling
+  # GitHub runners have 16 GB. Synthea's elderly patients produce large transaction
+  # bundles; at 1,000 patients HAPI runs out of heap with the local 3 GB default.
+  KINDLING_HAPI_MEM: 6g
+  SYNTHEA_VERSION: "3.4.0"
+  TUVA_ASSETS_VERSION: "tuva-core-1.0.0_qm-1.0.0"
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - run: uv sync --group dbt
+
+      - name: Cache Synthea and Tuva terminology
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/kindling/synthea
+            .kindling/tuva-assets
+          key: kindling-assets-synthea-${{ env.SYNTHEA_VERSION }}-${{ env.TUVA_ASSETS_VERSION }}
+
+      - name: Start HAPI FHIR
+        run: docker compose -f stack/compose.yaml --profile core up -d
+
+      - name: Run pipeline
+        run: uv run kindling run --patients "$PATIENTS" --report pipeline-report.json
+
+      - name: Job summary
+        if: always()
+        run: |
+          python3 - <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          import json, pathlib
+          p = pathlib.Path("pipeline-report.json")
+          if not p.exists():
+              print("Pipeline did not produce a report."); raise SystemExit
+          r = json.loads(p.read_text())
+          print(f"## Kindling pipeline — {r['settings']['patients']} patients\n")
+          print("| Step | Seconds |\n|---|---:|")
+          for s in r["steps"]:
+              print(f"| {s['name']} | {s['seconds']} |")
+          s = r.get("summary") or {}
+          if s:
+              print(f"\n**{s.get('patients')}** patients · **{s.get('encounters')}** encounters · "
+                    f"**{s.get('medical_claim_lines')}** medical claim lines\n")
+              print("| Measure | Denominator | Numerator | Exclusions | Rate |\n|---|---:|---:|---:|---:|")
+              for m in s.get("quality_measures", []):
+                  print(f"| {m['measure_id']} {m['name']} | {m['denominator']} | {m['numerator']} | "
+                        f"{m['exclusions']} | {m['rate']} |")
+          EOF
+
+      - name: Package artifacts
+        if: success()
+        run: |
+          mkdir -p artifacts
+          cp pipeline-report.json artifacts/
+          # DuckDB warehouse (Tuva marts + flattened FHIR) for Superset and downloads.
+          zstd -q -19 -T0 .kindling/warehouse/kindling.duckdb -o artifacts/kindling.duckdb.zst
+          # FHIR server database, restored by the demo box instead of re-loading bundles.
+          docker compose -f stack/compose.yaml exec -T hapi-db pg_dump -U hapi -Fc hapi > artifacts/hapi.pgdump
+          ls -lh artifacts
+
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: kindling-${{ env.PATIENTS }}-patients
+          path: artifacts/
+          retention-days: 14
+
+      - name: HAPI logs
+        if: failure()
+        run: docker compose -f stack/compose.yaml logs --tail 300 hapi

@@ -1,0 +1,84 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "name": "procedure",
+  "title": "Procedures",
+  "status": "active",
+  "description": "One row per Procedure.",
+  "resource": "Procedure",
+  "select": [
+    {
+      "column": [
+        {
+          "name": "id",
+          "path": "getResourceKey()",
+          "type": "id"
+        },
+        {
+          "name": "patient_id",
+          "path": "subject.getReferenceKey(Patient)",
+          "type": "id"
+        },
+        {
+          "name": "encounter_id",
+          "path": "encounter.getReferenceKey(Encounter)",
+          "type": "id"
+        },
+        {
+          "name": "status",
+          "path": "status",
+          "type": "code"
+        },
+        {
+          "name": "code_system",
+          "path": "code.coding.first().system",
+          "type": "uri"
+        },
+        {
+          "name": "code_code",
+          "path": "code.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "code_display",
+          "path": "(code.coding.first().display | code.text).first()",
+          "type": "string"
+        },
+        {
+          "name": "performed_start",
+          "path": "(performed.ofType(Period).start | performed.ofType(dateTime)).first()",
+          "type": "dateTime"
+        },
+        {
+          "name": "performed_end",
+          "path": "performed.ofType(Period).end",
+          "type": "dateTime"
+        },
+        {
+          "name": "practitioner_id",
+          "path": "performer.actor.first().getReferenceKey(Practitioner)",
+          "type": "id"
+        },
+        {
+          "name": "location_id",
+          "path": "location.getReferenceKey(Location)",
+          "type": "id"
+        },
+        {
+          "name": "reason_system",
+          "path": "reasonCode.first().coding.first().system",
+          "type": "uri"
+        },
+        {
+          "name": "reason_code",
+          "path": "reasonCode.first().coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "reason_display",
+          "path": "(reasonCode.first().coding.first().display | reasonCode.first().text).first()",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

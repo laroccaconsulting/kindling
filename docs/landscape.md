@@ -53,7 +53,7 @@ should be re-verified when each entry is written.
 | Google FHIR Data Pipes | FHIR → Parquet pipelines | Beam-based, with SQL on FHIR views. |
 | Microsoft FHIR-Converter | HL7v2 / C-CDA → FHIR | Liquid templates. |
 | OHDSI stack (OMOP CDM, ATLAS, Achilles, DQD, HADES) | Observational research | For the OMOP bridge track. |
-| Evidence / Superset / Metabase | Dashboards | Candidates for the dashboard layer. |
+| **Apache Superset** | Dashboards | The Kindling dashboard layer (ADR 0003). Connects to DuckDB via `duckdb-engine`. |
 | Open Integration Engine | Integration engine | Community fork after NextGen Connect (Mirth) went closed-source. |
 
 ## Measure and decide (CQL)

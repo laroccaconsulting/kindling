@@ -1,0 +1,84 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "name": "observation_component",
+  "title": "Observation components",
+  "status": "active",
+  "description": "One row per Observation.component (e.g. systolic and diastolic blood pressure).",
+  "resource": "Observation",
+  "select": [
+    {
+      "column": [
+        {
+          "name": "observation_id",
+          "path": "getResourceKey()",
+          "type": "id"
+        },
+        {
+          "name": "patient_id",
+          "path": "subject.getReferenceKey(Patient)",
+          "type": "id"
+        },
+        {
+          "name": "encounter_id",
+          "path": "encounter.getReferenceKey(Encounter)",
+          "type": "id"
+        },
+        {
+          "name": "category",
+          "path": "category.first().coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "panel_code",
+          "path": "code.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "effective_datetime",
+          "path": "(effective.ofType(dateTime) | effective.ofType(Period).start).first()",
+          "type": "dateTime"
+        }
+      ]
+    },
+    {
+      "forEach": "component",
+      "column": [
+        {
+          "name": "component_index",
+          "path": "%rowIndex",
+          "type": "integer"
+        },
+        {
+          "name": "code_system",
+          "path": "code.coding.first().system",
+          "type": "uri"
+        },
+        {
+          "name": "code_code",
+          "path": "code.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "code_display",
+          "path": "(code.coding.first().display | code.text).first()",
+          "type": "string"
+        },
+        {
+          "name": "value_quantity",
+          "path": "value.ofType(Quantity).value",
+          "type": "decimal"
+        },
+        {
+          "name": "value_unit",
+          "path": "(value.ofType(Quantity).code | value.ofType(Quantity).unit).first()",
+          "type": "string"
+        },
+        {
+          "name": "value_code",
+          "path": "value.ofType(CodeableConcept).coding.first().code",
+          "type": "code"
+        }
+      ]
+    }
+  ]
+}

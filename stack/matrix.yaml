@@ -1,0 +1,15 @@
+# Certified combinations: every entry passes .github/workflows/pipeline.yml end to end.
+# Bump versions here together with stack/compose.yaml, dbt/packages.yml and
+# packages/kindling-synthea (DEFAULT_VERSION).
+- name: golden-path-2026.09
+  verified: 2026-09-25
+  synthea: 3.4.0
+  hapi_fhir: hapiproject/hapi:v8.12.0-1
+  postgres: postgres:16.10-alpine
+  sql_on_fhir_tests: FHIR/sql-on-fhir.js@0821b673
+  tuva_core: v1.0.0
+  tuva_quality_measures: v1.0.0
+  tuva_data_assets: tuva-core 1.0.0, quality-measures 1.0.0
+  dbt_core: ">=1.10.5,<2"
+  duckdb: 1.5.5
+  superset: apache/superset:5.0.0

@@ -1,0 +1,23 @@
+slice_name: Encounters
+description: null
+certified_by: null
+certification_details: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: COUNT(*)
+    label: Encounters
+    hasCustomLabel: true
+    optionName: metric_6fc282c997bd
+  adhoc_filters: []
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: SMART_NUMBER
+  datasource: encounters__table
+query_context: null
+cache_timeout: null
+uuid: 5bc93503-dd82-5e02-856e-c55f8e53098d
+version: 1.0.0
+dataset_uuid: 885eab0d-2d60-5d90-be89-79e6197948ad

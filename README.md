@@ -26,8 +26,31 @@ Kindling provides that, with four things:
    anyone can click through the EHR, query the FHIR API, run a quality measure and look
    at the resulting dashboards without installing anything.
 
-> **Status:** planning. See [`docs/PLAN.md`](docs/PLAN.md) for the roadmap and
+> **Status:** Phase 1 ("zero to dashboard") works end to end. See
+> [`docs/PLAN.md`](docs/PLAN.md) for the roadmap and
 > [`docs/landscape.md`](docs/landscape.md) for the tool catalog.
+
+## Quickstart
+
+```bash
+uv sync --group dbt
+uv run kindling up --profile core        # HAPI FHIR + Postgres
+uv run kindling run --patients 100       # Synthea → HAPI → $export → SQL on FHIR → DuckDB → Tuva
+uv run kindling up --profile analytics   # Superset on http://localhost:8088 (admin/admin)
+```
+
+Full walkthrough: [`docs/guides/zero-to-dashboard.md`](docs/guides/zero-to-dashboard.md).
+
+## Repository layout
+
+| Path | What's there |
+|---|---|
+| `packages/` | `kindling-*` Python packages (uv workspace): synthea, fhir-load, bulk, sof, health (CLI) |
+| `dbt/` | Tuva connector: flattened FHIR → Tuva input layer → Tuva Core + Quality Measures |
+| `stack/` | Docker Compose profiles and the certified version matrix |
+| `superset/` | Slim Superset image and dashboards as code |
+| `docs/` | MkDocs site: walkthroughs, concepts, landscape, plan and ADRs |
+| `.github/workflows/` | CI, the nightly end-to-end pipeline, and docs publishing |
 
 ## Principles
 
@@ -45,4 +68,5 @@ Kindling provides that, with four things:
 
 ## License
 
-Apache-2.0 (proposed). Upstream components keep their own licenses. See the landscape doc.
+Apache-2.0, © LaRocca Consulting and contributors. Upstream components keep their own
+licenses; see the landscape doc. Key decisions are recorded in [`docs/decisions/`](docs/decisions/README.md).

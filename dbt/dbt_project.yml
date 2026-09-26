@@ -1,0 +1,47 @@
+name: kindling_tuva
+version: "0.1.0"
+config-version: 2
+require-dbt-version: ">=1.10.5,<3.0.0"
+
+profile: kindling
+
+# FHIR (flattened by kindling-sof into the `fhir` schema) → Tuva Input Layer → Tuva.
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+clean-targets: ["target", "dbt_packages"]
+
+flags:
+  require_ref_searches_node_package_before_root: true
+
+vars:
+  claims_enabled: true
+  clinical_enabled: true
+  provider_attribution_enabled: false
+  data_quality_enabled: false
+
+  # Read Tuva's terminology from a local mirror (see `kindling tuva-assets`) instead of
+  # S3. Empty means "use S3", which needs DuckDB's httpfs extension.
+  tuva_seed_duckdb_storage_root: "{{ env_var('KINDLING_TUVA_ASSETS', '') }}"
+
+  # Synthea prescriptions carry no dispense quantity or days supply. Pharmacy claims
+  # assume a 30-day fill so adherence measures have something to count.
+  kindling_default_days_supply: 30
+  kindling_data_source: synthea
+
+  # Synthea runs with reference date 2026-01-01, so 2025 is the last full year of data.
+  quality_measures_period_end: "{{ env_var('KINDLING_PERIOD_END', '2025-12-31') }}"
+
+models:
+  kindling_tuva:
+    staging:
+      +schema: kindling_staging
+      +materialized: view
+    intermediate:
+      +schema: kindling_staging
+      +materialized: table
+    input_layer:
+      +schema: input_layer
+      +materialized: table
+      +tags: [input_layer]

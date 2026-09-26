@@ -1,0 +1,44 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "name": "medication",
+  "title": "Medications",
+  "status": "active",
+  "description": "One row per Medication resource (targets of medicationReference).",
+  "resource": "Medication",
+  "select": [
+    {
+      "column": [
+        {
+          "name": "id",
+          "path": "getResourceKey()",
+          "type": "id"
+        },
+        {
+          "name": "status",
+          "path": "status",
+          "type": "code"
+        },
+        {
+          "name": "code_system",
+          "path": "code.coding.first().system",
+          "type": "uri"
+        },
+        {
+          "name": "code_code",
+          "path": "code.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "code_display",
+          "path": "(code.coding.first().display | code.text).first()",
+          "type": "string"
+        },
+        {
+          "name": "form_code",
+          "path": "form.coding.first().code",
+          "type": "code"
+        }
+      ]
+    }
+  ]
+}

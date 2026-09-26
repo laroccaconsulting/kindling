@@ -1,0 +1,79 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "name": "location",
+  "title": "Locations",
+  "status": "active",
+  "description": "One row per Location (facilities).",
+  "resource": "Location",
+  "select": [
+    {
+      "column": [
+        {
+          "name": "id",
+          "path": "getResourceKey()",
+          "type": "id"
+        },
+        {
+          "name": "source_identifier",
+          "path": "identifier.where(system = 'https://github.com/synthetichealth/synthea').value.first()",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "path": "name",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "path": "status",
+          "type": "code"
+        },
+        {
+          "name": "type_code",
+          "path": "type.first().coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "managing_organization_id",
+          "path": "managingOrganization.getReferenceKey(Organization)",
+          "type": "id"
+        },
+        {
+          "name": "managing_organization_identifier",
+          "path": "managingOrganization.identifier.value",
+          "type": "string"
+        },
+        {
+          "name": "address_line",
+          "path": "address.line.join(', ')",
+          "type": "string"
+        },
+        {
+          "name": "city",
+          "path": "address.city",
+          "type": "string"
+        },
+        {
+          "name": "state",
+          "path": "address.state",
+          "type": "string"
+        },
+        {
+          "name": "postal_code",
+          "path": "address.postalCode",
+          "type": "string"
+        },
+        {
+          "name": "latitude",
+          "path": "position.latitude",
+          "type": "decimal"
+        },
+        {
+          "name": "longitude",
+          "path": "position.longitude",
+          "type": "decimal"
+        }
+      ]
+    }
+  ]
+}

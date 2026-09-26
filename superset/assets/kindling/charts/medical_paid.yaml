@@ -1,0 +1,23 @@
+slice_name: Medical paid
+description: null
+certified_by: null
+certification_details: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(paid_amount)
+    label: Paid
+    hasCustomLabel: true
+    optionName: metric_0ac15724c013
+  adhoc_filters: []
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: $,.0f
+  datasource: medical_claims__table
+query_context: null
+cache_timeout: null
+uuid: 197d5ac9-f556-52a4-a286-251b51d165f1
+version: 1.0.0
+dataset_uuid: eea91b9e-9923-5222-b2ae-6da83c402815

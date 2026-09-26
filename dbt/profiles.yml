@@ -1,0 +1,8 @@
+kindling:
+  target: duckdb
+  outputs:
+    duckdb:
+      type: duckdb
+      path: "{{ env_var('KINDLING_DUCKDB', '../.kindling/warehouse/kindling.duckdb') }}"
+      schema: main
+      threads: 4

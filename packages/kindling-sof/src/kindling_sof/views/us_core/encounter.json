@@ -1,0 +1,119 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "name": "encounter",
+  "title": "Encounters",
+  "status": "active",
+  "description": "One row per Encounter.",
+  "resource": "Encounter",
+  "select": [
+    {
+      "column": [
+        {
+          "name": "id",
+          "path": "getResourceKey()",
+          "type": "id"
+        },
+        {
+          "name": "patient_id",
+          "path": "subject.getReferenceKey(Patient)",
+          "type": "id"
+        },
+        {
+          "name": "status",
+          "path": "status",
+          "type": "code"
+        },
+        {
+          "name": "class_code",
+          "path": "class.code",
+          "type": "code"
+        },
+        {
+          "name": "type_system",
+          "path": "type.first().coding.first().system",
+          "type": "uri"
+        },
+        {
+          "name": "type_code",
+          "path": "type.first().coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "type_display",
+          "path": "(type.first().coding.first().display | type.first().text).first()",
+          "type": "string"
+        },
+        {
+          "name": "period_start",
+          "path": "period.start",
+          "type": "dateTime"
+        },
+        {
+          "name": "period_end",
+          "path": "period.end",
+          "type": "dateTime"
+        },
+        {
+          "name": "reason_system",
+          "path": "reasonCode.first().coding.first().system",
+          "type": "uri"
+        },
+        {
+          "name": "reason_code",
+          "path": "reasonCode.first().coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "reason_display",
+          "path": "(reasonCode.first().coding.first().display | reasonCode.first().text).first()",
+          "type": "string"
+        },
+        {
+          "name": "reason_condition_id",
+          "path": "reasonReference.first().getReferenceKey(Condition)",
+          "type": "id"
+        },
+        {
+          "name": "practitioner_id",
+          "path": "participant.individual.first().getReferenceKey(Practitioner)",
+          "type": "id"
+        },
+        {
+          "name": "practitioner_name",
+          "path": "participant.individual.first().display",
+          "type": "string"
+        },
+        {
+          "name": "location_id",
+          "path": "location.first().location.getReferenceKey(Location)",
+          "type": "id"
+        },
+        {
+          "name": "location_name",
+          "path": "location.first().location.display",
+          "type": "string"
+        },
+        {
+          "name": "service_provider_id",
+          "path": "serviceProvider.getReferenceKey(Organization)",
+          "type": "id"
+        },
+        {
+          "name": "service_provider_name",
+          "path": "serviceProvider.display",
+          "type": "string"
+        },
+        {
+          "name": "admit_source_code",
+          "path": "hospitalization.admitSource.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "discharge_disposition_code",
+          "path": "hospitalization.dischargeDisposition.coding.first().code",
+          "type": "code"
+        }
+      ]
+    }
+  ]
+}

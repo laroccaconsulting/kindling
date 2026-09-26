@@ -1,0 +1,104 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "name": "explanation_of_benefit",
+  "title": "Explanation of benefit (claim headers)",
+  "status": "active",
+  "description": "One row per adjudicated claim (ExplanationOfBenefit), including contained coverage and payer.",
+  "resource": "ExplanationOfBenefit",
+  "select": [
+    {
+      "column": [
+        {
+          "name": "id",
+          "path": "getResourceKey()",
+          "type": "id"
+        },
+        {
+          "name": "claim_identifier",
+          "path": "identifier.where(system = 'https://bluebutton.cms.gov/resources/variables/clm_id').value.first()",
+          "type": "string"
+        },
+        {
+          "name": "claim_id",
+          "path": "claim.getReferenceKey(Claim)",
+          "type": "id"
+        },
+        {
+          "name": "patient_id",
+          "path": "patient.getReferenceKey(Patient)",
+          "type": "id"
+        },
+        {
+          "name": "claim_type",
+          "path": "type.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "status",
+          "path": "status",
+          "type": "code"
+        },
+        {
+          "name": "outcome",
+          "path": "outcome",
+          "type": "code"
+        },
+        {
+          "name": "billable_start",
+          "path": "billablePeriod.start",
+          "type": "dateTime"
+        },
+        {
+          "name": "billable_end",
+          "path": "billablePeriod.end",
+          "type": "dateTime"
+        },
+        {
+          "name": "created",
+          "path": "created",
+          "type": "dateTime"
+        },
+        {
+          "name": "payer_name",
+          "path": "(insurer.display | insurance.first().coverage.display).first()",
+          "type": "string"
+        },
+        {
+          "name": "coverage_type",
+          "path": "contained.ofType(Coverage).type.text.first()",
+          "type": "string"
+        },
+        {
+          "name": "provider_id",
+          "path": "provider.getReferenceKey(Practitioner)",
+          "type": "id"
+        },
+        {
+          "name": "facility_id",
+          "path": "facility.getReferenceKey(Location)",
+          "type": "id"
+        },
+        {
+          "name": "facility_name",
+          "path": "facility.display",
+          "type": "string"
+        },
+        {
+          "name": "encounter_id",
+          "path": "item.encounter.first().getReferenceKey(Encounter)",
+          "type": "id"
+        },
+        {
+          "name": "total_submitted",
+          "path": "total.where(category.coding.code = 'submitted').amount.value.first()",
+          "type": "decimal"
+        },
+        {
+          "name": "payment_amount",
+          "path": "payment.amount.value",
+          "type": "decimal"
+        }
+      ]
+    }
+  ]
+}

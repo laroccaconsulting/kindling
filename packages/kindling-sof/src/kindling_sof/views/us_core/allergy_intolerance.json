@@ -1,0 +1,64 @@
+{
+  "resourceType": "https://sql-on-fhir.org/ig/StructureDefinition/ViewDefinition",
+  "name": "allergy_intolerance",
+  "title": "Allergies and intolerances",
+  "status": "active",
+  "description": "One row per AllergyIntolerance.",
+  "resource": "AllergyIntolerance",
+  "select": [
+    {
+      "column": [
+        {
+          "name": "id",
+          "path": "getResourceKey()",
+          "type": "id"
+        },
+        {
+          "name": "patient_id",
+          "path": "patient.getReferenceKey(Patient)",
+          "type": "id"
+        },
+        {
+          "name": "clinical_status",
+          "path": "clinicalStatus.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "type",
+          "path": "type",
+          "type": "code"
+        },
+        {
+          "name": "category",
+          "path": "category.first()",
+          "type": "code"
+        },
+        {
+          "name": "criticality",
+          "path": "criticality",
+          "type": "code"
+        },
+        {
+          "name": "code_system",
+          "path": "code.coding.first().system",
+          "type": "uri"
+        },
+        {
+          "name": "code_code",
+          "path": "code.coding.first().code",
+          "type": "code"
+        },
+        {
+          "name": "code_display",
+          "path": "(code.coding.first().display | code.text).first()",
+          "type": "string"
+        },
+        {
+          "name": "recorded_date",
+          "path": "recordedDate",
+          "type": "dateTime"
+        }
+      ]
+    }
+  ]
+}

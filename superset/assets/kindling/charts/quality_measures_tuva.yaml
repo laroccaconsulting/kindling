@@ -1,0 +1,26 @@
+slice_name: Quality measures (Tuva)
+description: null
+certified_by: null
+certification_details: null
+viz_type: table
+params:
+  viz_type: table
+  query_mode: raw
+  all_columns:
+  - measure_id
+  - measure_name
+  - denominator
+  - numerator
+  - exclusions
+  - performance_rate
+  adhoc_filters: []
+  order_by_cols: []
+  row_limit: 100
+  server_page_length: 10
+  include_search: false
+  datasource: quality_measures__table
+query_context: null
+cache_timeout: null
+uuid: 84aed71f-d4f0-509e-83f4-c2d48b388e6e
+version: 1.0.0
+dataset_uuid: 21375f78-f374-59c1-92e8-1452ea55eaaf
