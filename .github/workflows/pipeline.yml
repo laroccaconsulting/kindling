@@ -30,6 +30,9 @@ env:
   # Nightly runs build the demo population; PRs run a quick smoke test.
   PATIENTS: ${{ inputs.patients || (github.event_name == 'schedule' && '1000') || '50' }}
   KINDLING_DATA_DIR: ${{ github.workspace }}/.kindling
+  # GitHub runners have 16 GB. Synthea's elderly patients produce large transaction
+  # bundles; at 1,000 patients HAPI runs out of heap with the local 3 GB default.
+  KINDLING_HAPI_MEM: 6g
   SYNTHEA_VERSION: "3.4.0"
   TUVA_ASSETS_VERSION: "tuva-core-1.0.0_qm-1.0.0"
 
